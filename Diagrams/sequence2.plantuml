@@ -1,0 +1,46 @@
+@startuml
+title Vizualizare Istoric / Replay și Ștergere Joc
+
+actor Utilizator
+participant Sistem
+database BazaDate
+
+' Vizualizare istoric și replay
+Utilizator -> Sistem : vizualizeazaIstoric()
+activate Sistem
+Sistem -> BazaDate : preiaJocuriSalvate()
+activate BazaDate
+BazaDate --> Sistem : listaJocuri
+deactivate BazaDate
+Sistem --> Utilizator : afiseazaIstoric(listaJocuri)
+
+' Replay direct după afișarea istoric
+Utilizator -> Sistem : selecteazaJocSalvat(idJoc)
+activate Sistem
+Sistem -> BazaDate : preiaMutari(idJoc)
+activate BazaDate
+BazaDate --> Sistem : listaMutari
+deactivate BazaDate
+Sistem --> Utilizator : activeazăControaleReplay(listaMutari)
+
+Utilizator -> Sistem : apasaButonReplay(comanda)
+activate Sistem
+Sistem --> Utilizator : afiseazaPozitie(pozitie)
+deactivate Sistem
+
+' Ștergere joc din istoric
+Utilizator -> Sistem : stergeJoc(idJoc)
+activate Sistem
+Sistem --> Utilizator : confirmaStergere(idJoc)?
+alt confirmat
+    Sistem -> BazaDate : eliminaJoc(idJoc)
+    activate BazaDate
+    BazaDate --> Sistem : ackStergere
+    deactivate BazaDate
+    Sistem --> Utilizator : afiseazaMesaj("Șters cu succes")
+else anulat
+    Sistem --> Utilizator : afiseazaMesaj("Ștergere anulată")
+end
+deactivate Sistem
+
+@enduml

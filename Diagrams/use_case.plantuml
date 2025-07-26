@@ -1,0 +1,87 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+title Diagrama cazurilor de utilizare - Aplicație Șah
+
+actor "Utilizator" as U
+actor "Sistem" as S
+actor "Stockfish" as SF
+actor "Model" as M
+
+rectangle "Aplicație Șah" {
+
+  ' === Coloana 1 (stânga) ===
+  (Selectează modul de joc) as UC1
+  (Alege modul de joc) as UC2
+  (Pornește partida nouă) as UC3
+  (Efectuează o mutare) as UC4
+  (Vizualizează istoric jocuri) as UC5
+  (Revede partidele salvate) as UC6
+  (Șterge partida din istoric) as UC7
+
+  ' === Coloana 2 (dreapta) ===
+  (Initializează tabla) as UC8
+  (Actualizează tabla) as UC9
+  (Solicită mutare Stockfish/Model) as UC10
+  (Solicită evaluare Stockfish) as UC11
+  (Actualizează evaluare) as UC12
+  (Încarcă jocurile salvate) as UC13
+  (Reia partida salvată) as UC14
+  (Șterge partida) as UC15
+
+  ' === Coloană jos - AI ===
+  together {
+    (Primește starea tablei) as UC16
+    (Calculează cea mai bună mutare) as UC17
+    (Evaluează poziția) as UC18
+  }
+
+  ' === Poziționare 2 coloane (manual) ===
+  UC1 -[hidden]-> UC8
+  UC2 -[hidden]-> UC9
+  UC3 -[hidden]-> UC10
+  UC4 -[hidden]-> UC11
+  UC5 -[hidden]-> UC12
+  UC6 -[hidden]-> UC13
+  UC7 -[hidden]-> UC14
+
+  ' === Legături Utilizator ===
+  U -- UC1
+  U -- UC2
+  U -- UC3
+  U -- UC4
+  U -- UC5
+  U -- UC6
+  U -- UC7
+
+  ' === Legături Sistem ===
+  S -- UC8
+  S -- UC9
+  S -- UC10
+  S -- UC11
+  S -- UC12
+  S -- UC13
+  S -- UC14
+  S -- UC15
+
+  ' === Include / Extends ===
+  UC3 .> UC8 : <<include>>
+  UC4 .> UC9 : <<include>>
+  UC4 .> UC12 : <<include>>
+  UC5 .> UC13 : <<include>>
+  UC6 .> UC14 : <<include>>
+  UC7 .> UC15 : <<include>>
+  UC10 .> UC16 : <<include>>
+  UC10 .> UC17 : <<include>>
+  UC11 .> UC18 : <<include>>
+
+  ' === Legături AI (drepata) ===
+  UC16 --- SF
+  UC17 --- SF
+  UC18 --- SF
+
+  UC16 --- M
+  UC17 --- M
+}
+
+@enduml

@@ -1,0 +1,45 @@
+@startuml  
+title Activitate: Desfășurarea unei partide complete
+
+start
+
+:Inițializează jocul;
+:Stabilește tipul jucătorului 1 și 2;
+
+repeat
+  :Determină jucătorul curent;
+
+  if (Este utilizator?) then (Da)
+    :Utilizatorul alege o mutare;
+
+    repeat
+      if (Mutarea este validă?) then (Da)
+        break
+      else (Nu)
+        :Afișează eroare: Mutare invalidă;
+      endif
+    repeat while (Solicită altă mutare)
+
+    :Aplică mutarea pe tablă;
+
+  else (Este AI)
+    if (Este Stockfish?) then (Da)
+      :Solicită mutare de la Stockfish;
+    else (Este Model AI)
+      :Solicită mutare de la Model AI;
+    endif
+
+    :Primește mutare AI;
+    :Aplică mutarea pe tablă;
+  endif
+
+  if (Jocul s-a încheiat?) then (Da)
+    :Arată rezultatul final;
+    stop
+  else (Nu)
+    :Schimbă rândul;
+  endif
+
+repeat while (jocul nu s-a încheiat)
+
+@enduml

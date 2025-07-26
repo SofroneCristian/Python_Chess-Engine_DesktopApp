@@ -1,0 +1,126 @@
+@startuml
+top to bottom direction
+skinparam linetype ortho
+skinparam classAttributeIcon false
+title Diagramă de clase – Aplicație Șah
+
+class ChessBoard {
+  - board: List<Piece>
+  - board_state_history: List<BoardState>
+  - white_player: Player
+  - black_player: Player
+  - current_player: Player
+  + make_move(from: Square, to: Square): bool
+  + is_game_over(): bool
+  + is_checkmate(): bool
+  + is_stalemate(): bool
+}
+
+class Player {
+  - color: Color
+  - board: ChessBoard
+  + Player(color: Color, board: ChessBoard)
+}
+
+class GameManager {
+  - board: ChessBoard
+  - game_moves: List<Move>
+  - stats: GameStats
+  - stockfish_level: int
+  + setup_game(mode: Mode)
+  + save_game(filePath: String)
+  + determine_winner(): Player
+}
+
+class ChessAI {
+  - piece_weights: Map<Piece, int>
+  - position_scores: Map<Position, float>
+  + convert_board_format(board: ChessBoard): InternalFormat
+  + bound(alpha: float, beta: float)
+  + moves(board: InternalFormat): List<Move>
+  + rotate(board: InternalFormat): InternalFormat
+  + value(position: Position): float
+  + gen(moves: List<Move>): List<Move>
+  + search(depth: int): Move
+  + get_best_move(board: ChessBoard): Move
+  + move()
+}
+
+class StockfishBot {
+  - engine: ExternalEngine
+  - level: int
+  + configure(params: Map<String, Object>)
+  + get_best_move(board: ChessBoard): Move
+  + get_evaluation(board: ChessBoard): float
+}
+
+class MainWindow {
+  + on_play_clicked()
+  + _setup_buttons()
+  + _setup_slideshows()
+  + on_history_clicked()
+}
+
+class GameModeDialog {
+  + on_mode_selected(mode: Mode)
+  + on_slider_changed(value: int)
+  + _setup_ui()
+}
+
+class GameWindow {
+  + execute_move()
+  + make_model_move()
+  + make_next_move()
+  + on_move_made()
+  + check_game_over(): bool
+}
+
+class ChessBoardWidget {
+  + get_initial_position(): BoardState
+  + calculate_possible_moves(square: Square): List<Square>
+  + _is_move_allowed(from: Square, to: Square): bool
+  + _handle_move(from: Square, to: Square)
+  + _handle_promotion()
+}
+
+class PromotionDialog {
+  + select_promotion_piece(): PieceType
+}
+
+class GameHistoryWindow {
+  + load_games(): List<GameSummary>
+  + next_move(): BoardState
+  + prev_move(): BoardState
+  + _update_board_position(state: BoardState)
+  + delete_game(id: String)
+}
+
+class EvaluationBarWidget {
+  + update_evaluation(value: float)
+}
+
+' Relații
+Player --> ChessBoard : joacă pe
+GameManager *-- ChessBoard : deține
+GameManager --> ChessAI : folosește
+GameManager --> StockfishBot : folosește
+
+ChessBoard "1" o-- "2" Player : alb/negru
+ChessBoard --> ChessAI : delegă
+ChessBoard --> StockfishBot : delegă
+
+MainWindow --> GameModeDialog : creează
+MainWindow --> GameWindow : deschide
+MainWindow --> GameHistoryWindow : deschide
+
+GameModeDialog --> GameManager : configurează
+GameWindow --> ChessBoardWidget : afișează
+GameWindow --> GameManager : controlează
+GameWindow --> EvaluationBarWidget : actualizează
+
+ChessBoardWidget --> ChessBoard : citește/scrie
+PromotionDialog --> GameWindow : invocat de
+GameHistoryWindow --> GameManager : interoghează
+GameHistoryWindow --> ChessBoardWidget : redă
+
+@enduml

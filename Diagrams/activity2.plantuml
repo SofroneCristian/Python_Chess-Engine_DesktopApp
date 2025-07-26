@@ -1,0 +1,20 @@
+@startuml  
+title Activitate: Promovarea unui pion
+
+start
+
+:Execută mutare;
+
+if (Pionul a ajuns pe ultima linie?) then (Da)
+  :Blochează interacțiunea jocului;
+  :Afișează dialog de promovare;
+  :Utilizatorul selectează piesă (regină, cal, nebun, turn);
+  :Înlocuiește pionul cu piesa aleasă;
+  else (Nu)
+endif
+
+:Actualizează starea tablei;
+:Continuă jocul;
+
+stop
+@enduml

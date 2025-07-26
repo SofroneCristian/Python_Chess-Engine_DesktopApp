@@ -1,0 +1,36 @@
+@startuml
+title Diagrama de stare: Desfășurarea unei partide de șah
+
+[*] --> ConfigurareJoc : aplicația pornește
+
+state ConfigurareJoc {
+  [*] --> AșteptareSelecțieMod
+  AșteptareSelecțieMod --> PregătireJoc : mod de joc selectat
+}
+
+ConfigurareJoc --> RândJucător : jocul începe
+
+state RândJucător {
+  [*] --> AșteptareMutare
+}
+
+RândJucător --> MutarePrimita : mutare selectată
+
+MutarePrimita --> StareMutareInvalidă : [mutare invalidă]
+MutarePrimita --> StareMutareValidă : [mutare validă]
+
+StareInvalidă --> RândJucător : reîncercare
+
+StareMutareValidă --> PromovarePion : [pion ajunge linia 8/1]
+StareMutareValidă --> EvaluareFinal : [altfel]
+
+PromovarePion --> EvaluareFinal : piesă selectată
+
+EvaluareFinal --> StareFinală : [mat sau remiză]
+EvaluareFinal --> SchimbDeTură : [jocul continuă]
+
+SchimbDeTură --> RândJucător
+
+StareFinală --> [*]
+
+@enduml

@@ -1,0 +1,57 @@
+@startuml
+title 1. Inițializare Partidă Nouă și Desfășurare Tur
+
+actor Utilizator
+participant Sistem
+participant Stockfish
+participant Model
+
+' Inițializare partidă nouă
+Utilizator -> Sistem : selecteazaModJoc(mod)\nsi pornestePartida()
+activate Sistem
+Sistem -> Sistem : initializeazaInterfataTabla()
+Sistem -> Sistem : initializeazaPiese()
+alt mod == Stockfish
+    Sistem -> Stockfish : initializeaza(nivelStockfish)
+    activate Stockfish
+    Stockfish --> Sistem : ack
+    deactivate Stockfish
+else mod == Model
+    Sistem -> Model : initializeaza(parametriModel)
+    activate Model
+    Model --> Sistem : ack
+    deactivate Model
+end
+Sistem --> Utilizator : afiseazaTablaInitiala()
+deactivate Sistem
+
+' Desfășurare tur de mutări
+Utilizator -> Sistem : efectueazaMutare(din, spre)
+activate Sistem
+Sistem -> Sistem : valideazaMutare(din, spre)
+alt mutare valida
+    Sistem -> Sistem : actualizeazaTabla(din, spre)
+    alt urmator == AI
+        alt mod == Stockfish
+            Sistem -> Stockfish : calculeazaMutare(stareTabla)
+            activate Stockfish
+            Stockfish --> Sistem : mutareOptima
+            deactivate Stockfish
+        else mod == Model
+            Sistem -> Model : calculeazaMutare(stareTabla)
+            activate Model
+            Model --> Sistem : mutareOptima
+            deactivate Model
+        end
+        Sistem -> Sistem : aplicaMutare(mutareOptima)
+        Sistem -> Sistem : actualizeazaEvaluare()
+    end
+    Sistem --> Utilizator : reimprospateazaTabla()
+else mutare invalida
+    Sistem --> Utilizator : afiseazaEroare("Mutare invalidă")
+    Utilizator -> Sistem : efectueazaMutare(din, spre)
+    activate Sistem
+end
+deactivate Sistem
+
+@enduml
