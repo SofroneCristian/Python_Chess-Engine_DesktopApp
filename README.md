@@ -222,6 +222,16 @@ To analyze past games, click **Game History** from the main menu.
 
 ---
 
+## 🛠️ Technologies Used
+
+- **Python** – Core language for logic, AI, and data handling  
+- **PyCharm** – Development environment for writing and debugging code  
+- **Git & GitHub** – Version control and project hosting  
+- **JSON** – Used for saving game data  
+- **python-chess** – Handles chess rules and integrates with Stockfish  
+- **Stockfish** – Provides strong AI and board evaluations  
+- **PyQt6** – GUI framework for creating the desktop interface  
+
 
 
 
