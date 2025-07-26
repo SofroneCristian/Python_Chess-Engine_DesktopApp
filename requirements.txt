@@ -1,7 +1,0 @@
-python-chess>=0.31.4
-numpy>=1.26.0,<2.2.0
-tqdm>=4.62.3
-matplotlib>=3.4.3scipy>=1.8.1
-PyQt6==6.9.0
-PyQt6-Qt6==6.9.0
-PyQt6-sip==13.10.0
